@@ -3,6 +3,7 @@ import { Tarea } from './tareas.model';
 import { EstadoTarea } from './tareas.model';
 import { Request } from 'express';
 import { Payload } from 'src/models/payload.model';
+import { HttpException } from '@nestjs/common';
 
 @Injectable()
 export class TareasService {
@@ -31,8 +32,11 @@ export class TareasService {
     },
   ];
 
-  getAllTareas(): Tarea[] {
-    return this.tareas;
+  getAllTareas(req: Request): Tarea[] {
+    const token = req['user'] as Payload;
+    const Userid = token.sub;
+    const tareas = this.tareas.filter((t) => t.UserID === Userid);
+    return tareas;
   }
 
   getTarea(id: number): Tarea {
@@ -40,7 +44,7 @@ export class TareasService {
     return this.tareas.find((tarea) => tarea.id === id)!;
   }
 
-  createTareas(tarea: Tarea, req: Request): Tarea {
+  createTareas(tarea: Tarea, req: Request) {
     const tokenUser = req['user'] as Payload;
     const userID = tokenUser.sub;
 
@@ -51,5 +55,28 @@ export class TareasService {
     };
     this.tareas.push(newTarea);
     return newTarea;
+  }
+
+  deleteTarea(id: number) {
+    const tarea = this.tareas.find((t) => t.id === id);
+
+    if (!tarea) {
+      throw new HttpException('tarea no encontrada', 400);
+    }
+
+    tarea.estado = EstadoTarea.eliminada;
+    // this.tareas = this.tareas.filter((t) => t.id !== id);
+
+    return { mensaje: 'tarea eliminada' };
+  }
+
+  completeTarea(id: number) {
+    const tarea = this.tareas.find((t) => t.id === id);
+    if (!tarea) {
+      throw new HttpException('error al actualizar', 400);
+    }
+
+    tarea.estado = EstadoTarea.completada;
+    return { mensaje: 'tarea completada' };
   }
 }
