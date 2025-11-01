@@ -78,11 +78,7 @@ export class TareasService {
     }
 
     const newEstado = (tarea.estado = estado);
-    console.log(newEstado);
-
     const newTarea = this.tareas.find((t) => t.id === id);
-
-    console.log(newTarea);
 
     return { mensaje: 'ok', tarea: newTarea };
   }

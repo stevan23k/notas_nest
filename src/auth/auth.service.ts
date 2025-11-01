@@ -3,6 +3,8 @@ import { loginDTO } from './dto/loginDTO';
 import { registerDTO } from './dto/registerDTO';
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hashSync } from 'bcrypt';
+import { Request } from 'express';
+import { Payload } from 'src/models/payload.model';
 
 @Injectable()
 export class AuthService {
@@ -62,5 +64,10 @@ export class AuthService {
     } else {
       throw new HttpException('Invalid credential', 401);
     }
+  }
+
+  getUser(req: Request) {
+    const token = req['user'] as Payload;
+    return { nombre: token.nombre };
   }
 }

@@ -40,7 +40,6 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('check')
   check(@Req() req: Request): any {
-    console.log(req.cookies); // 👈 aquí llega la cookie
-    return req.cookies;
+    return this.authService.getUser(req);
   }
 }
