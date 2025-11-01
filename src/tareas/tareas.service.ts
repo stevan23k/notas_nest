@@ -12,7 +12,7 @@ export class TareasService {
       id: 1,
       nombre: 'Comprar alimentos',
       descripcion: 'Comprar frutas, verduras y pan',
-      estado: EstadoTarea.completada,
+      estado: EstadoTarea.enProgreso,
       UserID: 2,
     },
     {
@@ -26,7 +26,7 @@ export class TareasService {
       id: 3,
       nombre: 'Estudiar para el examen',
       descripcion: 'Repasar los apuntes y hacer ejercicios',
-      estado: EstadoTarea.eliminada,
+      estado: EstadoTarea.enProgreso,
       UserID: 1,
       deletedAt: new Date(),
     },
@@ -70,13 +70,20 @@ export class TareasService {
     return { mensaje: 'tarea eliminada' };
   }
 
-  completeTarea(id: number) {
+  changeEstado(estado: EstadoTarea, id: number) {
     const tarea = this.tareas.find((t) => t.id === id);
+
     if (!tarea) {
-      throw new HttpException('error al actualizar', 400);
+      throw new HttpException('tarea no encontrada', 400);
     }
 
-    tarea.estado = EstadoTarea.completada;
-    return { mensaje: 'tarea completada' };
+    const newEstado = (tarea.estado = estado);
+    console.log(newEstado);
+
+    const newTarea = this.tareas.find((t) => t.id === id);
+
+    console.log(newTarea);
+
+    return { mensaje: 'ok', tarea: newTarea };
   }
 }

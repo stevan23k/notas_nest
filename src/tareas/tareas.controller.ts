@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Req, Put } from '@nestjs/common';
 import { TareasService } from './tareas.service';
 import { HttpCode, HttpStatus } from '@nestjs/common';
 import { Param, Body } from '@nestjs/common';
@@ -6,6 +6,7 @@ import { tareasDTO } from './DTO/tareasDTO';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import type { Request } from 'express';
+import { EstadoTarea } from './tareas.model';
 
 @Controller('tareas')
 export class TareasController {
@@ -43,9 +44,10 @@ export class TareasController {
 
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Get('complete/:id')
-  completeTarea(@Param('id') id: number) {
+  @Put('change/:id')
+  changeEstado(@Param('id') id: number, @Body() estado: EstadoTarea) {
+    const newEstado = estado['estado'];
     id = Number(id);
-    return this.tareaSvc.completeTarea(id);
+    return this.tareaSvc.changeEstado(newEstado, id);
   }
 }

@@ -11,6 +11,9 @@ interface JwtPayload {
   sub: number;
   nombre: string;
 }
+interface token {
+  token: string;
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
