@@ -68,6 +68,6 @@ export class AuthService {
 
   getUser(req: Request) {
     const token = req['user'] as Payload;
-    return { nombre: token.nombre };
+    return { nombre: token.nombre, isAuth: true };
   }
 }
