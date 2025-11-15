@@ -37,6 +37,15 @@ export class AuthController {
     });
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    res.clearCookie('token');
+    return res.json({
+      logout: 'logout exitoso',
+    });
+  }
+
   @UseGuards(AuthGuard)
   @Get('check')
   check(@Req() req: Request): any {
